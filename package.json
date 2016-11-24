@@ -1,0 +1,26 @@
+{
+    "author": "alekoz47",
+    "dependencies": {},
+    "keywords": [],
+    "name": "bars",
+    "pebble": {
+        "displayName": "Bars",
+        "enableMultiJS": true,
+        "messageKeys": [],
+        "projectType": "rocky",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt",
+            "chalk",
+            "emery"
+        ],
+        "uuid": "29195be3-bd08-4484-8dc8-66ac8925d8b5",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "0.1.0"
+}
