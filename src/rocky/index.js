@@ -27,6 +27,7 @@ function drawBars(ctx, hs, w, h, minute, hour, day) {
 			drawTicks(ctx, w, h, x, y + h, ii);
 		} else {
 			drawBar(ctx, x, y, "white", w, h);
+			drawLabel(ctx, x, y, ii);
 		}
 		y += h;
 	}
@@ -57,6 +58,10 @@ function drawTicks(ctx, w, h, x, y, index) {
 	for (var ii = x + 3; ii <= tickCount * tickAdvance; ii += tickAdvance) {
 		drawLine(ctx, ii, y, ii, y - (h / 3));
 	}
+}
+
+function drawLabel(ctx, x, y, index) {
+	return null;
 }
 
 function drawLine(ctx, x1, y1, x2, y2) {
