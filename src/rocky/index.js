@@ -43,9 +43,9 @@ rocky.on("draw", function(event) {
 	ctx.fillRect(0, 0, w, h);
 	
 	drawBars(ctx, h, barWidth, barHeight);
-	drawBar(ctx, barWidth / 4, h - (7 * barHeight) + 3, "black", minuteLength, 15);
-	drawBar(ctx, barWidth / 4, h - (5 * barHeight) + 3, "black", hourLength, 15);
-	drawBar(ctx, barWidth / 4, h - (3 * barHeight) + 3, "black", dayLength, 15);
+	drawBar(ctx, barWidth / 4, h - (7 * barHeight) + 3, "black", minuteLength, 14);
+	drawBar(ctx, barWidth / 4, h - (5 * barHeight) + 3, "black", hourLength, 14);
+	drawBar(ctx, barWidth / 4, h - (3 * barHeight) + 3, "black", dayLength, 14);
 });
 
 rocky.on("minutechange", function(event) {
