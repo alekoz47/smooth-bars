@@ -6,7 +6,7 @@ var rocky = require("rocky");
 //================================
 //Functions:
 
-function drawBars(ctx, hs, w, h, minute, hour, day) {
+function drawBars(ctx, ws, hs, w, h, minute, hour, day) {
 	var x = w / 4;
 	var y = hs - (7 * h);
 	
@@ -16,18 +16,20 @@ function drawBars(ctx, hs, w, h, minute, hour, day) {
 			switch (ii / 2) {
 				case 0:
 					drawBar(ctx, x + 3, y + 3, "black", day, h - 6);
+					drawTicks(ctx, w, h, x, y + h, 30);
 					break;
 				case 1:
 					drawBar(ctx, x + 3, y + 3, "black", hour, h - 6);
+					drawTicks(ctx, w, h, x, y + h, 24);
 					break;
 				case 2:
 					drawBar(ctx, x + 3, y + 3, "black", minute, h - 6);
+					drawTicks(ctx, w, h, x, y + h, 60);
 					break;
 			}
-			drawTicks(ctx, w, h, x, y + h, ii);
 		} else {
 			drawBar(ctx, x, y, "white", w, h);
-			drawLabel(ctx, x, y, ii);
+			drawLabel(ctx, ws, x, y, ii - 1);
 		}
 		y += h;
 	}
@@ -38,30 +40,41 @@ function drawBar(ctx, x, y, color, wb, hb) {
 	ctx.fillRect(x, y, wb, hb);
 }
 
-function drawTicks(ctx, w, h, x, y, index) {
-	var tickCount = 0;
+function drawTicks(ctx, w, h, x, y, count) {
 	ctx.lineWidth = 3;
 	ctx.strokeStyle = "darkgrey";
-	switch (index) {
-		case 0:
-			tickCount = 30;
-			break;
-		case 1:
-			tickCount = 24;
-			break;
-		case 2:
-			tickCount = 60;
-			break;
-	}
-	var tickAdvance = w / tickCount;
+	var tickAdvance = w / count;
 	
-	for (var ii = x + 3; ii <= tickCount * tickAdvance; ii += tickAdvance) {
+	for (var ii = x + 3; ii <= (count * tickAdvance); ii += tickAdvance) {
 		drawLine(ctx, ii, y, ii, y - (h / 3));
 	}
 }
 
-function drawLabel(ctx, x, y, index) {
-	return null;
+function drawLabel(ctx, ws, x, y, index) {
+	ctx.fillStyle = "black";
+	//ctx.font = "21px Roboto";
+	ctx.font = "18px Gothic";
+	ctx.textAlign = "left";
+	y -= ctx.measureText("A").height / 4;
+	var xd = findTextCenter(ctx, ws, "Days");
+	var xh = findTextCenter(ctx, ws, "Hours");
+	var xm = findTextCenter(ctx, ws, "Minutes");
+	
+	switch (index / 2) {
+		case 0:
+			ctx.fillText("Days", xd, y);
+			break;
+		case 1:
+			ctx.fillText("Hours", xh, y);
+			break;
+		case 2:
+			ctx.fillText("Minutes", xm, y);
+			break;
+	}
+}
+
+function findTextCenter(ctx, ws, s) {
+	return (ws / 2) - (ctx.measureText(s).width / 2);
 }
 
 function drawLine(ctx, x1, y1, x2, y2) {
@@ -89,7 +102,7 @@ rocky.on("draw", function(event) {
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, w, h);
 	
-	drawBars(ctx, h, barWidth, barHeight, minuteLength, hourLength, dayLength);
+	drawBars(ctx, w, h, barWidth, barHeight, minuteLength, hourLength, dayLength);
 });
 
 rocky.on("minutechange", function(event) {
