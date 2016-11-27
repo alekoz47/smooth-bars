@@ -19,7 +19,7 @@ function drawBars(ctx, hs, w, h) {
 	}
 }
 
-function drawLoads(ctx, ws, hs, wb, hb, days, minutes, hours) {
+function drawLoads(ctx, hs, w, h, days, minutes, hours) {
 	return null;
 }
 
@@ -38,16 +38,19 @@ rocky.on("draw", function(event) {
 	var h = ctx.canvas.unobstructedHeight;
 	var barWidth = (w / 2) + 30;
 	var barHeight = (h / 9);
-	var minutes = (d.getMinutes()) / 60;
-	var hours = (d.getHours() % 12 + (minutes / 60)) / 12;
-	var days = d.getDate();
+	var minuteLength = (d.getMinutes() / 60) * barWidth;
+	var hourLength = (d.getHours() / 24) * barWidth;
+	var dayLength = (d.getDate() / 30) * barWidth;
 	
 	ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, w, h);
 	
 	drawBars(ctx, h, barWidth, barHeight);
-	drawLoads(ctx, h, barWidth, barHeight - 5, days, hours, minutes);
+	drawBar(ctx, barWidth / 4, h - (7 * barHeight) + 3, "black", minuteLength, 15);
+	drawBar(ctx, barWidth / 4, h - (5 * barHeight) + 3, "black", hourLength, 15);
+	drawBar(ctx, barWidth / 4, h - (3 * barHeight) + 3, "black", dayLength, 15);
+	drawLoads(ctx, h, barWidth, barHeight - 5, dayLength, hourLength, minuteLength);
 });
 
 rocky.on("minutechange", function(event) {

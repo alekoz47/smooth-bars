@@ -15,6 +15,7 @@
         "targetPlatforms": [
             "basalt",
             "chalk",
+            "diorite",
             "emery"
         ],
         "uuid": "29195be3-bd08-4484-8dc8-66ac8925d8b5",
