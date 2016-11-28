@@ -9,10 +9,15 @@ var loadColor = "black";
 var tickColor = "darkgrey";
 var textColor = "black";
 
+var loadOffSet = 3;
+
 //================================
 //Functions:
 
-function drawBars(ctx, ws, hs, w, h, minute, hour, date, days) {
+function drawBars(ctx, ws,
+				   hs, w,
+				   h, minute,
+				   hour, date, days) {
 	var x = w / 4;
 	var y = hs - (7 * h);
 	
@@ -21,15 +26,21 @@ function drawBars(ctx, ws, hs, w, h, minute, hour, date, days) {
 			drawBar(ctx, x, y, barColor, w, h);
 			switch (ii / 2) {
 				case 0:
-					drawBar(ctx, x + 3, y + 3, loadColor, date, h - 6);
+					drawBar(ctx, x + loadOffSet,
+							y + loadOffSet, loadColor,
+							date, h - (2 * loadOffSet));
 					drawTicks(ctx, w, h, x, y + h, days / 7);
 					break;
 				case 1:
-					drawBar(ctx, x + 3, y + 3, loadColor, hour, h - 6);
+					drawBar(ctx, x + loadOffSet,
+							y + loadOffSet, loadColor,
+							hour, h - (2 * loadOffSet));
 					drawTicks(ctx, w, h, x, y + h, 8);
 					break;
 				case 2:
-					drawBar(ctx, x + 3, y + 3, loadColor, minute, h - 6);
+					drawBar(ctx, x + loadOffSet,
+							y + loadOffSet, loadColor,
+							minute, h - (2 * loadOffSet));
 					drawTicks(ctx, w, h, x, y + h, 12);
 					break;
 			}
@@ -47,12 +58,18 @@ function drawBar(ctx, x, y, color, wb, hb) {
 }
 
 function drawTicks(ctx, w, h, x, y, count) {
-	ctx.lineWidth = 3;
+	ctx.lineWidth = loadOffSet;
 	ctx.strokeStyle = tickColor;
-	var tickAdvance = (w - 6) / count;
+	var tickAdvance = (w - (2 * loadOffSet)) / count;
 	
-	for (var ii = x + 3; ii <= (w + x - 3); ii += tickAdvance) {
-		drawLine(ctx, ii, y, ii, y - (h / 3));
+	x += loadOffSet;
+	for (var ii = 0; ii <= count; ii++) {
+		if (ii % 2 === 0) {
+			drawLine(ctx, x, y, x, y - (h / 3));
+		} else {
+			drawLine(ctx, x, y, x, y - ((h / 3) / 2));
+		}
+		x += tickAdvance;
 	}
 }
 
@@ -78,15 +95,33 @@ function drawLabel(ctx, ws, x, y, index) {
 	}
 }
 
-function findTextCenter(ctx, ws, s) {
-	return (ws / 2) - (ctx.measureText(s).width / 2);
-}
-
 function drawLine(ctx, x1, y1, x2, y2) {
 	ctx.beginPath();
 	ctx.moveTo(x1, y1);
 	ctx.lineTo(x2, y2);
 	ctx.stroke();
+}
+
+function findMonthDays(ctx, d) {
+	switch(d.getMonth()) {
+		case 0 || 2 || 4 || 6 || 7 || 9 || 11:
+			return 31;
+		case 3 || 5 || 8 || 10:
+			return 30;
+		case 1:
+			if ((d.getFullYear() % 4) === 0) {
+				return 28;
+			} else {
+				return 29;
+			}
+			break;
+		default:
+			return 30;
+	}
+}
+
+function findTextCenter(ctx, ws, s) {
+	return (ws / 2) - (ctx.measureText(s).width / 2);
 }
 
 //================================
@@ -99,34 +134,22 @@ rocky.on("draw", function(event) {
 	var h = ctx.canvas.unobstructedHeight;
 	var barWidth = (w / 2) + 30;
 	var barHeight = (h / 9);
+	var loadWidth = (barWidth - (2 * loadOffSet));
 	
-	switch(d.getMonth()) {
-		case 0 || 2 || 4 || 6 || 7 || 9 || 11:
-			var days = 31;
-			break;
-		case 3 || 5 || 8 || 10:
-			days = 30;
-			break;
-		case 1:
-			if ((d.getFullYear() % 4) === 0) {
-				days = 28;
-			} else {
-				days = 29;
-			}
-			break;
-		default:
-			days = 30;
-	}
+	var days = findMonthDays(ctx, d);
+	var minuteLength = (d.getMinutes() / 60) * loadWidth;
+	var hourLength = (d.getHours() / 24) * loadWidth;
+	var dayLength = (d.getDate() / days) * loadWidth;
 	
-	var minuteLength = (d.getMinutes() / 60) * (barWidth - 6);
-	var hourLength = (d.getHours() / 24) * (barWidth - 6);
-	var dayLength = (d.getDate() / days) * (barWidth - 6);
-	
-	ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+	ctx.clearRect(0, 0,
+				  ctx.canvas.clientWidth, ctx.canvas.clientHeight);
 	ctx.fillStyle = screenColor;
 	ctx.fillRect(0, 0, w, h);
 	
-	drawBars(ctx, w, h, barWidth, barHeight, minuteLength, hourLength, dayLength, days);
+	drawBars(ctx, w,
+			 h, barWidth,
+			 barHeight, minuteLength,
+			 hourLength, dayLength, days);
 });
 
 rocky.on("minutechange", function(event) {
