@@ -3,6 +3,12 @@
 
 var rocky = require("rocky");
 
+var screenColor = "white";
+var barColor = "red";
+var loadColor = "black";
+var tickColor = "darkgrey";
+var textColor = "black";
+
 //================================
 //Functions:
 
@@ -12,23 +18,23 @@ function drawBars(ctx, ws, hs, w, h, minute, hour, date, days) {
 	
 	for (var ii = 0; ii <= 5; ii++) {
 		if (ii % 2 === 0) {
-			drawBar(ctx, x, y, "red", w, h);
+			drawBar(ctx, x, y, barColor, w, h);
 			switch (ii / 2) {
 				case 0:
-					drawBar(ctx, x + 3, y + 3, "black", date, h - 6);
+					drawBar(ctx, x + 3, y + 3, loadColor, date, h - 6);
 					drawTicks(ctx, w, h, x, y + h, days / 7);
 					break;
 				case 1:
-					drawBar(ctx, x + 3, y + 3, "black", hour, h - 6);
+					drawBar(ctx, x + 3, y + 3, loadColor, hour, h - 6);
 					drawTicks(ctx, w, h, x, y + h, 8);
 					break;
 				case 2:
-					drawBar(ctx, x + 3, y + 3, "black", minute, h - 6);
+					drawBar(ctx, x + 3, y + 3, loadColor, minute, h - 6);
 					drawTicks(ctx, w, h, x, y + h, 12);
 					break;
 			}
 		} else {
-			drawBar(ctx, x, y, "white", w, h);
+			drawBar(ctx, x, y, screenColor, w, h);
 			drawLabel(ctx, ws, x, y, ii - 1);
 		}
 		y += h;
@@ -42,18 +48,16 @@ function drawBar(ctx, x, y, color, wb, hb) {
 
 function drawTicks(ctx, w, h, x, y, count) {
 	ctx.lineWidth = 3;
-	ctx.strokeStyle = "darkgrey";
-	var tickAdvance = w / count;
+	ctx.strokeStyle = tickColor;
+	var tickAdvance = (w - 6) / count;
 	
-	//for (var ii = x + 3; ii <= (count * tickAdvance); ii += tickAdvance) {
 	for (var ii = x + 3; ii <= (w + x - 3); ii += tickAdvance) {
 		drawLine(ctx, ii, y, ii, y - (h / 3));
 	}
 }
 
 function drawLabel(ctx, ws, x, y, index) {
-	ctx.fillStyle = "black";
-	//ctx.font = "21px Roboto";
+	ctx.fillStyle = textColor;
 	ctx.font = "18px Gothic";
 	ctx.textAlign = "left";
 	y -= ctx.measureText("A").height / 4;
@@ -114,12 +118,12 @@ rocky.on("draw", function(event) {
 			days = 30;
 	}
 	
-	var minuteLength = ((d.getMinutes() + 1) / 60) * (barWidth - 6);
-	var hourLength = ((d.getHours() + 1) / 24) * (barWidth - 6);
-	var dayLength = ((d.getDate() + 1) / days) * (barWidth - 6);
+	var minuteLength = (d.getMinutes() / 60) * (barWidth - 6);
+	var hourLength = (d.getHours() / 24) * (barWidth - 6);
+	var dayLength = (d.getDate() / days) * (barWidth - 6);
 	
 	ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-	ctx.fillStyle = "white";
+	ctx.fillStyle = screenColor;
 	ctx.fillRect(0, 0, w, h);
 	
 	drawBars(ctx, w, h, barWidth, barHeight, minuteLength, hourLength, dayLength, days);
