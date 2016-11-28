@@ -114,9 +114,9 @@ rocky.on("draw", function(event) {
 			days = 30;
 	}
 	
-	var minuteLength = (d.getMinutes() / 60) * (barWidth - 6);
-	var hourLength = (d.getHours() / 24) * (barWidth - 6);
-	var dayLength = (d.getDate() / days) * (barWidth - 6);
+	var minuteLength = ((d.getMinutes() + 1) / 60) * (barWidth - 6);
+	var hourLength = ((d.getHours() + 1) / 24) * (barWidth - 6);
+	var dayLength = ((d.getDate() + 1) / days) * (barWidth - 6);
 	
 	ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
 	ctx.fillStyle = "white";
