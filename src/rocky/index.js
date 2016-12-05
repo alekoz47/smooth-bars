@@ -20,41 +20,40 @@ function drawBars(ctx, ws,
 				   hour, date, days) {
 	var x = w / 4;
 	var y = hs - (7 * h);
+	ctx.lineWidth = 10;
 	
 	for (var ii = 0; ii <= 5; ii++) {
 		if (ii % 2 === 0) {
-			drawBar(ctx, x, y, barColor, w, h);
+			ctx.strokeStyle = barColor;
+			drawLine(ctx, x, y, w, h);
+			ctx.strokeStyle = loadColor;
 			switch (ii / 2) {
 				case 0:
-					drawBar(ctx, x + loadOffSet,
-							y + loadOffSet, loadColor,
-							date, h - (2 * loadOffSet));
+					drawLine(ctx, x + loadOffSet,
+							y + loadOffSet, date, 
+							h - (2 * loadOffSet));
 					drawTicks(ctx, w, h, x, y + h, days / 7);
 					break;
 				case 1:
-					drawBar(ctx, x + loadOffSet,
-							y + loadOffSet, loadColor,
-							hour, h - (2 * loadOffSet));
+					drawLine(ctx, x + loadOffSet,
+							y + loadOffSet, hour, 
+							h - (2 * loadOffSet));
 					drawTicks(ctx, w, h, x, y + h, 8);
 					break;
 				case 2:
-					drawBar(ctx, x + loadOffSet,
-							y + loadOffSet, loadColor,
-							minute, h - (2 * loadOffSet));
+					drawLine(ctx, x + loadOffSet,
+							y + loadOffSet, minute, 
+							h - (2 * loadOffSet));
 					drawTicks(ctx, w, h, x, y + h, 12);
 					break;
 			}
 		} else {
-			drawBar(ctx, x, y, screenColor, w, h);
+			ctx.strokeStyle = screenColor;
+			drawLine(ctx, x, y, w, h);
 			drawLabel(ctx, ws, x, y, ii - 1);
 		}
 		y += h;
 	}
-}
-
-function drawBar(ctx, x, y, color, wb, hb) {
-	ctx.fillStyle = color;
-	ctx.fillRect(x, y, wb, hb);
 }
 
 function drawTicks(ctx, w, h, x, y, count) {
