@@ -8,8 +8,7 @@ var barColor = "red";
 var loadColor = "black";
 var tickColor = "darkgrey";
 var textColor = "black";
-
-var loadOffSet = 3;
+var barHeight = 20;
 
 //================================
 //Functions:
@@ -20,36 +19,35 @@ function drawBars(ctx, ws,
 				   hour, date, days) {
 	var x = w / 4;
 	var y = hs - (7 * h);
-	ctx.lineWidth = 10;
+	var barAdjust = barHeight / 2;
 	
 	for (var ii = 0; ii <= 5; ii++) {
 		if (ii % 2 === 0) {
+			ctx.lineWidth = barHeight;
 			ctx.strokeStyle = barColor;
-			drawLine(ctx, x, y, w, h);
+			drawLine(ctx, x, y + barAdjust, x + w, y + barAdjust);
 			ctx.strokeStyle = loadColor;
 			switch (ii / 2) {
 				case 0:
-					drawLine(ctx, x + loadOffSet,
-							y + loadOffSet, date, 
-							h - (2 * loadOffSet));
+					drawLine(ctx, x,
+							y + barAdjust, x + date, y + barAdjust);
 					drawTicks(ctx, w, h, x, y + h, days / 7);
 					break;
 				case 1:
-					drawLine(ctx, x + loadOffSet,
-							y + loadOffSet, hour, 
-							h - (2 * loadOffSet));
+					drawLine(ctx, x,
+							y + barAdjust, x + hour, y + barAdjust);
 					drawTicks(ctx, w, h, x, y + h, 8);
 					break;
 				case 2:
-					drawLine(ctx, x + loadOffSet,
-							y + loadOffSet, minute, 
-							h - (2 * loadOffSet));
+					drawLine(ctx, x,
+							y + barAdjust, x + minute, y + barAdjust);
 					drawTicks(ctx, w, h, x, y + h, 12);
 					break;
 			}
 		} else {
+			ctx.lineWidth = 15;
 			ctx.strokeStyle = screenColor;
-			drawLine(ctx, x, y, w, h);
+			drawLine(ctx, x, y + barAdjust, x + w, y + barAdjust);
 			drawLabel(ctx, ws, x, y, ii - 1);
 		}
 		y += h;
@@ -57,16 +55,16 @@ function drawBars(ctx, ws,
 }
 
 function drawTicks(ctx, w, h, x, y, count) {
-	ctx.lineWidth = loadOffSet;
+	ctx.lineWidth = 3;
 	ctx.strokeStyle = tickColor;
-	var tickAdvance = (w - (2 * loadOffSet)) / count;
+	var tickAdvance = (w - (2 * 3)) / count;
 	
-	x += loadOffSet;
+	x += 3;
 	for (var ii = 0; ii <= count; ii++) {
 		if (ii % 2 === 0) {
-			drawLine(ctx, x, y, x, y - (h / 3));
+			drawLine(ctx, x, y - 2, x, y - (h / 3) - 2);
 		} else {
-			drawLine(ctx, x, y, x, y - ((h / 3) / 2));
+			drawLine(ctx, x, y - 2, x, y - ((h / 3) / 2) - 2);
 		}
 		x += tickAdvance;
 	}
@@ -133,7 +131,7 @@ rocky.on("draw", function(event) {
 	var h = ctx.canvas.unobstructedHeight;
 	var barWidth = (w / 2) + 30;
 	var barHeight = (h / 9);
-	var loadWidth = (barWidth - (2 * loadOffSet));
+	var loadWidth = (barWidth - (2 * 3));
 	
 	var days = findMonthDays(ctx, d);
 	var minuteLength = (d.getMinutes() / 60) * loadWidth;
