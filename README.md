@@ -1,4 +1,4 @@
-# Bars
+# Smooth Bars
 
 A simple watchface using loading bars to represent the time and date.
 
